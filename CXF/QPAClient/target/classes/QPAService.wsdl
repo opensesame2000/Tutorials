@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions name="QPAService"
+	targetNamespace="http://www.porul.com/QPAService/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://www.porul.com/QPAService/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsdl:types>
+
+		<xsd:schema targetNamespace="http://www.porul.com/QPAService/">
+			<xsd:element name="productQuery" type="tns:productQueryComplexType">
+			</xsd:element>
+			<xsd:element name="productQueryResult">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="resultItem" maxOccurs="unbounded"
+							minOccurs="1">
+							<xsd:complexType>
+								<xsd:attribute name="productId" type="xsd:string" />
+								<xsd:attribute name="productName" type="xsd:string">
+								</xsd:attribute>
+								<xsd:attribute name="maker" type="xsd:string">
+								</xsd:attribute>
+								<xsd:attribute name="price" type="xsd:double" />
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:complexType name="productQueryComplexType">
+				<xsd:sequence>
+					<xsd:element name="queryItem" maxOccurs="unbounded"
+						minOccurs="1">
+						<xsd:complexType>
+							<xsd:attribute name="productId" type="xsd:string">
+							</xsd:attribute>
+							<xsd:attribute name="quantity" type="xsd:int">
+							</xsd:attribute>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="invalidQty" type="xsd:int"></xsd:element>
+		</xsd:schema>
+
+
+	</wsdl:types>
+	<wsdl:message name="queryRequest">
+		<wsdl:part element="tns:productQuery" name="parameters" />
+	</wsdl:message>
+	<wsdl:message name="queryResponse">
+		<wsdl:part element="tns:productQueryResult" name="parameters" />
+	</wsdl:message>
+
+
+	<wsdl:message name="queryInvalidQty">
+		<wsdl:part name="parameters" element="tns:invalidQty"></wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="QPAService">
+		<wsdl:operation name="query">
+			<wsdl:input message="tns:queryRequest" />
+			<wsdl:output message="tns:queryResponse" />
+			<wsdl:fault name="f-001" message="tns:queryInvalidQty"></wsdl:fault>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="QPAServiceSOAP" type="tns:QPAService">
+
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="query">
+
+			<soap:operation soapAction="http://www.porul.com/QPAService/query" />
+			<wsdl:input>
+
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+
+				<soap:body use="literal" />
+			</wsdl:output>
+
+			<wsdl:fault name="f-001">
+				<soap:fault use="literal" name="f-001" />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="QPAService">
+		<wsdl:port binding="tns:QPAServiceSOAP" name="p1">
+			<soap:address location="http://localhost:8080/qpas/p1" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
